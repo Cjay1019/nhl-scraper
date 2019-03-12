@@ -1,0 +1,46 @@
+<nav class="navbar fixed-top scrolling-navbar navbar-expand-lg navbar-dark primary-color">
+    <a class="navbar-brand mb-1" href="#">NHL Scraper</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+        aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav">
+            <li class="nav-item active">
+                <a class="nav-link" id="home" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link " id="articles" href="#">My Articles</a>
+            </li>
+            <li class="nav-item">
+                <button class="btn btn-success btn-sm" id="scrape">Scrape Articles</button>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12 my-5" id="articles-section">
+            <h2 class="h1-responsive font-weight-bold text-center my-5">Latest articles</h2>
+            {{#each articles}}
+            <div data-article-id={{_id}} class="row">
+                <div class="col-lg-5 col-xl-4">
+                    <div class="view overlay rounded z-depth-1-half mb-lg-0 mb-4"><img class="img-fluid" src={{image}}
+                            alt="Article image">
+                        <div class="mask rgba-white-slight"></div>
+                    </div>
+                </div>
+                <div class="col-lg-7 col-xl-8">
+                    <h3 class="font-weight-bold mb-3">{{title}}</h3>
+                    <p class="dark-grey-text">{{preview}}
+                    </p><a href={{link}} target="_blank" class="btn btn-primary btn-md">Read more</a><button
+                        class="btn btn-link btn-md save" data-clicked="no" data-_id="5c86fcc265e64215e0dff3d0"><i
+                            class="far fa-heart red-text fa-3x heart"></i></button>
+                </div>
+            </div>
+            <hr class="my-5">
+            {{/each}}
+        </div>
+    </div>
+</div>
