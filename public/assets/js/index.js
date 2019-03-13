@@ -48,6 +48,26 @@ $("#articles-section").on("click", ".delete", function() {
   });
 });
 
+$("#articles-section").on("click", ".notes", function() {
+  var _id = $(this)
+    .parent()
+    .parent()
+    .attr("data-article-id");
+  $("#save-note").attr({ "data-current-id": _id });
+  $.get(`/articles/${_id}`).then(function(data) {
+    console.log(data.note);
+  });
+});
+
+$("#save-note").on("click", function() {
+  var _id = $(this).attr("data-current-id");
+  newNote = { body: $("#new-note").val() };
+  $.post(`/articles/${_id}`, newNote).then(function(data) {
+    console.log(data);
+    $("#new-note").empty();
+  });
+});
+
 function getLatest() {
   $.get("/articles").then(function(data) {
     $("#articles-section").empty();
@@ -150,6 +170,8 @@ function getSaved() {
       var notesButton = $("<button>")
         .text("Notes")
         .attr({
+          "data-toggle": "modal",
+          "data-target": "#notes-modal",
           class: "btn btn-success btn-md notes",
           "data-_id": data[i]._id
         });
