@@ -55,7 +55,21 @@ $("#articles-section").on("click", ".notes", function() {
     .attr("data-article-id");
   $("#save-note").attr({ "data-current-id": _id });
   $.get(`/articles/${_id}`).then(function(data) {
-    console.log(data.note);
+    console.log(data);
+    var notes = Object.entries(data.note);
+    var noteBodies = notes.filter(function(note) {
+      return note[0] === "body";
+    });
+
+    for (i = 0; i < noteBodies.length; i++) {
+      var noteId = notes.filter(function(note) {
+        return note[0] === "_id";
+      });
+      var noteDiv = $("<div>").attr("data-id", noteId);
+      var note = $("<p>").text(noteBodies[i][1]);
+      var divider = $("<hr>").attr("class", "my-2");
+      $("#notes-section").append(note, divider);
+    }
   });
 });
 
@@ -64,7 +78,7 @@ $("#save-note").on("click", function() {
   newNote = { body: $("#new-note").val() };
   $.post(`/articles/${_id}`, newNote).then(function(data) {
     console.log(data);
-    $("#new-note").empty();
+    $("#new-note").val("");
   });
 });
 
