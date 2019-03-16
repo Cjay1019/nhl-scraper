@@ -55,22 +55,28 @@ $("#articles-section").on("click", ".notes", function() {
     .attr("data-article-id");
   $("#save-note").attr({ "data-current-id": _id });
   $.get(`/articles/${_id}`).then(function(data) {
+    $("#notes-section").empty();
     console.log(data);
-    var notes = Object.entries(data.note);
-    var noteBodies = notes.filter(function(note) {
-      return note[0] === "body";
-    });
-
-    for (i = 0; i < noteBodies.length; i++) {
-      var noteId = notes.filter(function(note) {
-        return note[0] === "_id";
+    for (i = 0; i < data.note.length; i++) {
+      var icon = $("<i>").attr("class", "fas fa-times fa-lg x");
+      var button = $("<button>").attr({
+        class: "btn btn-danger btn-sm float-right delete",
+        "data-id": data.note[i]._id
       });
-      var noteDiv = $("<div>").attr("data-id", noteId);
-      var note = $("<p>").text(noteBodies[i][1]);
+      var noteDiv = $("<div>");
+      var note = $("<p>").text(data.note[i].body);
       var divider = $("<hr>").attr("class", "my-2");
-      $("#notes-section").append(note, divider);
+      button.append(icon);
+      noteDiv.append(note, button, divider);
+      $("#notes-section").append(noteDiv);
     }
   });
+});
+
+$("#notes-section").on("click", ".delete", function() {
+  var _id = $(this).attr("data-id");
+  data = { _id: _id };
+  $.post("/deleteNote", data);
 });
 
 $("#save-note").on("click", function() {

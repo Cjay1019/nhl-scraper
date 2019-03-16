@@ -110,4 +110,9 @@ router.post("/delete", function(req, res) {
   res.end();
 });
 
+router.post("/deleteNote", function(req, res) {
+  db.Note.deleteOne({ _id: req.body._id }, function(err, note) {});
+  res.end();
+});
+
 module.exports = router;
