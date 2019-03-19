@@ -4,6 +4,7 @@ const mongoose = require("mongoose");
 const exphbs = require("express-handlebars");
 
 const PORT = process.env.PORT || 3000;
+var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/nhl_db";
 
 // Initialize Express
 const app = express();
@@ -23,9 +24,7 @@ const routes = require("./routes/scrapeRoutes");
 app.use(routes);
 
 // Connect to the Mongo DB
-mongoose.connect("mongodb://localhost/nhl_db", {
-  useNewUrlParser: true
-});
+mongoose.connect(MONGODB_URI);
 
 app.listen(PORT, function() {
   console.log("App running on port " + PORT + "!");
