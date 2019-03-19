@@ -54,29 +54,17 @@ $("#articles-section").on("click", ".notes", function() {
     .parent()
     .attr("data-article-id");
   $("#save-note").attr({ "data-current-id": _id });
-  $.get(`/articles/${_id}`).then(function(data) {
-    $("#notes-section").empty();
-    console.log(data);
-    for (i = 0; i < data.note.length; i++) {
-      var icon = $("<i>").attr("class", "fas fa-times fa-lg x");
-      var button = $("<button>").attr({
-        class: "btn btn-danger btn-sm float-right delete",
-        "data-id": data.note[i]._id
-      });
-      var noteDiv = $("<div>");
-      var note = $("<p>").text(data.note[i].body);
-      var divider = $("<hr>").attr("class", "my-2");
-      button.append(icon);
-      noteDiv.append(note, button, divider);
-      $("#notes-section").append(noteDiv);
-    }
-  });
+  getNotes(_id);
 });
 
 $("#notes-section").on("click", ".delete", function() {
-  var _id = $(this).attr("data-id");
-  data = { _id: _id };
-  $.post("/deleteNote", data);
+  var noteId = $(this).attr("data-id");
+  data = { _id: noteId };
+  var articleId = $("#notes-section").attr("data-article-id");
+  $.post("/deleteNote", data).then(function() {
+    console.log(data);
+    getNotes(articleId);
+  });
 });
 
 $("#save-note").on("click", function() {
@@ -85,6 +73,7 @@ $("#save-note").on("click", function() {
   $.post(`/articles/${_id}`, newNote).then(function(data) {
     console.log(data);
     $("#new-note").val("");
+    getNotes(_id);
   });
 });
 
@@ -208,6 +197,29 @@ function getSaved() {
       if (i !== data.length + 1) {
         $("#articles-section").append(divider);
       }
+    }
+  });
+}
+
+function getNotes(id) {
+  $.get(`/articles/${id}`).then(function(data) {
+    console.log(id);
+    $("#notes-section").empty();
+    console.log(data);
+    for (i = 0; i < data.note.length; i++) {
+      var icon = $("<i>").attr("class", "fas fa-times fa-lg x");
+      var button = $("<button>").attr({
+        class: "btn btn-danger btn-sm delete",
+        "data-id": data.note[i]._id
+      });
+      var noteDiv = $("<div>");
+      var note = $("<p>").text(data.note[i].body);
+      var divider = $("<hr>").attr("class", "my-2");
+      button.append(icon);
+      noteDiv.append(note, button, divider);
+      $("#notes-section")
+        .append(noteDiv)
+        .attr({ "data-article-id": id });
     }
   });
 }
